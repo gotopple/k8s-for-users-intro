@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: voter
+  namespace: workshop-day1-solutions
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voter
+  template:
+    metadata:
+      labels:
+        app: voter
+        version: v1
+    spec:
+      hostAliases:
+       - ip: "127.0.0.1"
+         hostnames:
+          - "vote"
+          - "redis"
+      containers:
+       - name: vote
+         image: dockersamples/examplevotingapp_vote:before
+         ports:
+          - containerPort: 80 # should be public 5000
+       - name: redis
+         image: redis:alpine
+         ports:
+          - containerPort: 6379 # should never be exposed
+      volumes:
+       - name: db-data
+         emptyDir: {}

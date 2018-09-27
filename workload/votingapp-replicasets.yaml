@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: voter
+  namespace: workshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voter
+  template:
+    metadata:
+      labels:
+        app: voter
+        version: v1
+    spec:
+      hostAliases:
+       - ip: "127.0.0.1"
+         hostnames:
+          - "vote"
+          - "redis"
+      containers:
+       - name: vote
+         image: dockersamples/examplevotingapp_vote:before
+         ports:
+          - containerPort: 80 # should be public 5000
+       - name: redis
+         image: redis:alpine
+         ports:
+          - containerPort: 6379 # should never be exposed
+      volumes:
+       - name: db-data
+         emptyDir: {}
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: voting-result
+  namespace: workshop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: voting-result
+  template:
+    metadata:
+      labels:
+        app: voting-result
+        version: v1
+    spec:
+      hostAliases:
+       - ip: "127.0.0.1"
+         hostnames:
+          - "result"
+          - "db"
+          - "worker"
+      containers:
+       - name: db
+         image: postgres:9.4
+         volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: db-data
+       - name: result
+         image: dockersamples/examplevotingapp_result:before
+         ports:
+          - containerPort: 80 # should be public 5001
+       - name: worker
+         image: dockersamples/examplevotingapp_worker
+      volumes:
+       - name: db-data
+         emptyDir: {}

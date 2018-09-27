@@ -8,7 +8,7 @@ All of the containers in a pod are configured such that they can interact like p
 
 Pod resources specify discrete workloads, not templates. A single pod resource will be realized into a single set of the described containers. It does not make sense to talk about "scaling" a pod. You are certainly free to create a bunch of copies of a pod (by literally creating multiple pod definitions), but there are better ways to accomplish this.
 
-### Exercise 1A: Explain Pod and Service
+### Exercise 1: Explain Pods and Services
 
 Before you can get started working with Pods you need to know about their structure and associated behaviors. You could pull up the Kubernetes API reference documentation but the documentation is also built into Kubernetes itself. The `explain` subcommand will describe any resource or resource property for any version of that resource supported by the current platform.
 
@@ -16,21 +16,48 @@ Run `kubectl explain pod` to see the top-level structure of a Pod. The `Status` 
 
 Kubernetes defaults to showing the earliest version of a resource available on the platform. You must specify the `--api-version` flag to lookup any specific version of a resource.
 
-Use `kubectl explain --api-version v1 pod`, `kubectl explain --api-version v1 pod.spec` and `kubectl explain --api-version v1 pod.spec.containers` to write a **v1 Pod** that runs Redis in a container. The Pod should be configured as follows:
+Use `kubectl explain --api-version v1 pod`, `kubectl explain --api-version v1 pod.spec` and `kubectl explain --api-version v1 pod.spec.containers` to consider a **v1 Pod** that runs Redis in a container. The Pod might be configured as follows:
 
 * Pod name: `redis`
 * Pod label key: `app` and value: `redis`
 * Single container named `redis`, using the `redis:alpine` image.
 
-### Exercise 1B: Introducing Namespaces
+There isn't going to be quite enough time to write your own in this workshop, but consider the solution at `./workload/redis-pod.yaml`. 
 
-Before you launch your Pod take a moment to validate your answer against the provided solution. Compare your answer with an example look at `./workload/redis-pod.yaml`. 
+```
+# Everything in this file is part of the same YAML document and 
+# thusly the same Kubernetes resource definition.
+
+apiVersion: v1    # Kubernetes API version
+kind: Pod         # Document resource kind
+
+metadata:         # Resource-level metadata
+  name: redis     # Name of the resource
+  labels:         # Applying taxonomy allows other resources to 
+                  # refer to this via selectors.
+    app: redis    # Labels are in a <key>: <value> form.
+    version: v1   # The version label is not special, though 
+                  # it is common for use with deployment and 
+                  # routing selection.
+  # This will keep solution resources in a separate Kubernetes namespace
+  namespace: workshop
+
+# Every resource has a spec. This is a free-form property map 
+# and validated on the serverside to match known resource types.
+spec:            
+
+  # Each pod can contain multiple containers. They all share IPC, 
+  # NET, and UTS namespaces. They are all on the same "virtual host."
+  containers:    
+   - name: redis
+     image: redis:alpine
+```
 
 Kubernetes provides Namespaces to isolate collections of related resources. A Namespace is another resource type and is created, and otherwise managed the same way as any other Kubernetes resource. By default resources are created in the `default` Namespace. That is where most of your work today will be created. 
 
 All resource names must be unique within any give Namespace. That is to say you cannot have two Pods named, `redis` in the same Namespace. So we want to keep the provided solutions separate from your workspace. To do so we've defined a new Namespace called, `workshop`. You can see that definition in [custom-ns.yaml](./workload/custom-ns.yaml).
 
-If you want to launch the provided solutions, make sure you `create` the namespace first: 
+Next, you'll launch the provided solutions, but make sure you `create` the namespace first: 
 
 ```
 kubectl create -f workload/custom-ns.yaml
@@ -40,13 +67,11 @@ kubectl create -f workload/custom-ns.yaml
 
 Next you're going to start your Redis pod. The `kubectl apply` subcommand uses declarative tooling to analyze the delta between the state on the platform and the new desired state. You'll use this subcommand and specify the file containing your Pod definition. Do that now.
 
-If you just want to run the provided solution, then run:
-
 ```
 kubectl create -f workload/redis-pod.yaml
 ```
 
-Once your Pod has been created you should be able to see it and any other Pods running on your platform. Do that now by running `kubectl get pod`. 
+Once your Pod has been created you should be able to see it and any other Pods running on your platform. Do that now by running `kubectl get pod --namespace workshop`. 
 
 The output should look something like:
 
@@ -55,12 +80,12 @@ NAME      READY     STATUS    RESTARTS   AGE
 redis     1/1       Running   0          2m
 ```
 
-This is a list of the Pods running in the default Namespace. Note that 1/1 is in a Ready state. For reference you can compare that list with the Pods running in the `workshop` Namespace by running `kubectl get po --namespace workshop`.
+This is a list of the Pods running in the workshop Namespace. Note that 1/1 is in a Ready state. For reference you can compare that list with the Pods running in the `default` Namespace by running `kubectl get po`. There shouldn't be anything listed.
 
 So, redis is running "somewhere" but how do you access it? How do you know anything about it? You can get deep details about any Kubernetes resource (including your Pods) with the `kubectl describe` subcommand. Like other kubectl commands the first argument is always the resource type that you're inspecting and the remainder is a variadic list of names that you want to operate on. 
 
 ```
-kubectl describe po redis
+kubectl describe po redis --namespace workshop
 ```
 
 In the output from describe you'll see associated metadata, relationships with other resources, the set of associated containers, and an assigned IP address (this is the ClusterIP which we'll cover later). This is the IP address for the Pod. However you'll also note that it is a private network IP address that is not likely routable from your browser or terminal. If you want to test this redis instance you're going to need to get creative.
@@ -70,7 +95,7 @@ You might be familiar with Docker already and be used to the idea of execing a c
 You could exec a command in the redis container, but in production you'd only be able to do that from the cluster node where the container is running. That won't scale well. Instead use the `kubectl exec` subcommand. It is similar in form and function but since Pods can contain multiple containers it does require a bit of refinement. Use the following command to define and increment a counter in your redis instance:
 
 ```
-kubectl exec redis -i -t -- redis-cli incr my-training-counter
+kubectl exec redis --namespace workshop -i -t -- redis-cli incr my-training-counter
 ```
 
 Repeat that command a few times to watch the counter increase.
@@ -78,16 +103,10 @@ Repeat that command a few times to watch the counter increase.
 By default the exec subcommand will use the first container defined in the Pod spec. If you need to exec on a different container you should specify both the Pod and container name:
 
 ```
-kubectl exec redis -c redis -i -t -- redis-cli incr my-training-counter
+kubectl exec redis -c redis --namespace workshop -i -t -- redis-cli incr my-training-counter
 ```
 
-If you need to work with a Pod in a different namespace you just need to specify that namespace:
-
-```
-kubectl exec redis -c redis -i -t --namespace workshop -- redis-cli incr my-training-counter
-```
-
-When you're finished having fun with your redis instance tear down your Pod with the `kubectl delete` subcommand. Remember, you specify the resources to delete by pointing to the resource definition files (the `-f` flag). Also remember to cleanup the pods running in other namespaces.
+When you're finished having fun with your redis instance tear down your Pod with the `kubectl delete` subcommand. Remember, you specify the resources to delete by pointing to the resource definition files (the `-f` flag). 
 
 ### Exercise 3: Compose to Kubernetes Conversion with Pods and Services
 
@@ -126,7 +145,7 @@ And the following container definitions:
 
 When software in this pod goes to resolve the name, "db" it should get "127.0.0.1" as the result.
 
-*Hint:* you might find a property on the pod.spec that allows you to manage custom host names in the pod.
+Consider the solution at [votingapp-pods.yaml](./workload/votingapp-pods.yaml).
 
 The five services are split in this way because the vote and results container both have software that binds to port 80. Those applications cannot live in the same pod. The act of voting and result publishing is bound by an asynchronous data processing pipeline and in this case the redis instance is a synchronous dependency for the voting application, but not the results application. By splitting the architecture into these two pods we can be sure that each component will function correctly without the other.
 
@@ -157,9 +176,9 @@ Create Service resource definitions according to the following table:
 | vote | 30000/TCP | n | `app: voter` |
 | result | 30001/TCP | n | `app: results` |
 
-Remember to separate your resource definitions with the YAML record separator, `---`.
+Consider the solution at [services.yaml][./workload/services.yaml].
 
-Once you're done startup your app with the `kubectl apply` command.
+Once you're done startup your app: `kubectl create -f ./workload/votingapp-pods.yaml -f ./workload/services.yaml`
 
 ##### Trying it out
 
@@ -167,9 +186,7 @@ Poll the resources a few times with `kubectl get po` and `kubectl get svc`. When
 
 Votes cast in one window should be reflected in the other shortly.
 
-If you're running into trouble you can checkout a solution under `ex3/solution` or just start up the solution stack with `kubectl apply -f ex3/solution`. That stack uses ports 31000 and 31001 respectively.
-
-Don't forget to tear down the solutions when you're done with `kubectl delete`.
+Don't forget to tear down the solutions when you're done with `kubectl delete -f ./workload/votingapp-pods.yaml -f ./workload/services.yaml`
 
 ## Resilience and Automated Deployment Control 
 
@@ -189,13 +206,17 @@ The ReplicaSet resource type is defined in the `apps/v1` API version. The `apps`
 
 You're going to want to create two ReplicaSets, one for each type of Pod in the previous exercise. Use `kubectl explain replicaset --api-version apps/v1` and `kubectl explain replicaset.spec --api-version apps/v1` to get the structure.
 
-Once you're finished with your new resource definitions start your resources with the `kubectl apply` subcommand. If you get stuck or want to check your solution you can find the example solution under `ex4/solution`. You can launch that solution by running `kubectl apply -f ex4/solution`
+The replicaset solutions are in [votingapp-replicasets.yaml](./workload/votingapp-replicasets.yaml). Start the solution now by running:
+
+```
+kubectl create -f ./workload/votingapp-replicasets.yaml -f ./workload/v2-services.yaml
+```
 
 When they've reached a full ready state open the voting application in your web browser: [localhost:30000](http://localhost:30000). Cast a vote and note the "container ID" at the bottom of the page. This is the hostname of the pod where the request was served. Note that you did not specify that name anywhere. It was created by the ReplicaSet. Go lookup the running Pod and ReplicaSet resources.
 
 ```
-kubectl get rs
-kubectl get po
+kubectl get rs --namespace workshop
+kubectl get po --namespace workshop
 ```
 
 Use `kubectl describe rs` to see the list of events associated with the voter ReplicaSet. You should see a line like near the bottom:

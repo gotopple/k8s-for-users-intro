@@ -1,0 +1,51 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: voter
+  namespace: workshop
+  labels:
+    app: voter
+    version: v1
+spec:
+  hostAliases:
+   - ip: "127.0.0.1"
+     hostnames:
+      - "redis"
+  containers:
+   - name: voter
+     image: dockersamples/examplevotingapp_vote:before
+     ports:
+      - containerPort: 80 
+   - name: redis
+     image: redis:alpine
+     ports:
+      - containerPort: 6379 
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: result
+  namespace: workshop
+  labels:
+    app: result
+    version: v1
+spec:
+  hostAliases:
+   - ip: "127.0.0.1"
+     hostnames:
+      - "db"
+  containers:
+   - name: db
+     image: postgres:9.4
+     volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: db-data
+   - name: result
+     image: dockersamples/examplevotingapp_result:before
+     ports:
+      - containerPort: 80 
+   - name: worker
+     image: dockersamples/examplevotingapp_worker
+  volumes:
+   - name: db-data
+     emptyDir: {}
