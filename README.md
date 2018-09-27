@@ -22,4 +22,4 @@ If you enjoyed this micro-workshop please [reach out](https://www.gotopple.com) 
 
 2018 [Topple](https://www.gotopple.com)
 
-![Topple](https://pbs.twimg.com/profile_images/1025131818364760064/eHQtfFCw_400x400.jpg)
+![Topple](./logo/2018TPL-Logo-Wordmark-Mixed-100px.png)
