@@ -9,7 +9,7 @@ Kubernetes, like other databases, is all about working with records in schemas. 
 Most Kubernetes distributions include several Kinds by default. Those are used to describe all sorts of operational resources that you typically encounter in a service software environment. For example Kubernetes includes: Job, CronJob, Service, Deployment, Event, NetworkPolicies, Secrets, and ConfigMaps. But Kubernetes is better suited for storing operational data than most other database solutions.
 
 * Resource schemas are self-documenting. (`kubectl explain <resource>`)
-* API semantics and mechanisms support extreme extensibility and integration with dsitributed state management best-practices.
+* API semantics and mechanisms support extreme extensibility and integration with distributed state management best-practices.
 * The API supports scalable event-driven "trigger-like" behavior.
 * Powerful role-based access control is included by default.
 * Encapsulation is only implemented via access control making all Kubernetes-homed data simple to automate against.
@@ -26,7 +26,7 @@ Run `kubectl version -o yaml` and verify that the client and server are version 
 
 ### 2. Create a Custom Schema (Kind)
 
-Open and read [business-papers.yaml](database/business-papers.yaml). This file defines a Custom Resource Definition (CRD) for a new kind called Paper (or Papers). A CRD is a resource that tells Kubernetes about a Kind of resource. Think of it like a table definition in a database. You might notice that this CRD only gives the new kind a name (and group, and version), and doesnt specify any columns or properties. Kubernetes is a document database and document structures are constrained by validation rules. This CRD does not provide any validation rules.
+Open and read [business-papers.yaml](database/business-papers.yaml). This file defines a Custom Resource Definition (CRD) for a new kind called Paper (or Papers). A CRD is a resource that tells Kubernetes about a Kind of resource. Think of it like a table definition in a database. You might notice that this CRD only gives the new kind a name (and group, and version), and doesn't specify any columns or properties. Kubernetes is a document database and document structures are constrained by validation rules. This CRD does not provide any validation rules.
 
 Add this CRD to your cluster using the command: `kubectl create -f database/business-papers.yaml`.
 
@@ -69,7 +69,7 @@ Retrieve the raw YAML for the first-paper:
 kubectl get paper first-paper -o yaml
 ```
 
-At this point you've created your first record in a custom schema in your personal Kubernetes database. Okay, well, technically two records... one for the CRD and one for the Paper. Things get more interesting when you start adding multiple resources. Add a second one from [second-example-paper.yaml](database/second-example-paper.yaml): `kubectl create -f database/second-example-paper.yaml`.
+At this point you've created your first record in a custom schema in your personal Kubernetes database. Okay, well, technically two records... One for the CRD and one for the Paper. Things get more interesting when you start adding multiple resources. Add a second one from [second-example-paper.yaml](database/second-example-paper.yaml): `kubectl create -f database/second-example-paper.yaml`.
 
 Now you can get both resources from Kubernetes at the same time and in a cohesive stream:
 
@@ -130,7 +130,7 @@ metadata:
 
 ### 4. Querying the Database (selectors)
 
-While Kubernetes does not enable you to query based on arbirtrary document properties, it does index and provides query interfaces on document taxonomy. Specifically, every resource can have **Labels** added to its `metadata` property. Labels are arbitrary key-value string pairs.
+While Kubernetes does not enable you to query based on arbitrary document properties, it does index and provides query interfaces on document taxonomy. Specifically, every resource can have **Labels** added to its `metadata` property. Labels are arbitrary key-value string pairs.
 
 Neither of the Papers that you added have any labels applied. So, to make this exercise a bit more interesting add a label to the `first-paper` paper using the following command:
 
@@ -141,7 +141,7 @@ kubectl label paper second-paper author=portia type=memo
 
 In this case you added two labels to each resource (you could have done this by modifying the YAML as well). You specifically labeled an author and a type. However, you could have added any labels that make sense. Generally you want labels to represent some cross-cutting property, not always something that is in the document itself. But this is a happy example.
 
-After the resources are labled you can query based on those labels. Get a list of all of the papers authored by Jeff: `kubectl get paper -l author=jeff`. Then get all of the papers that are memos in raw YAML: `kubectl get paper -l type=memo -o yaml`.
+After the resources are labeled you can query based on those labels. Get a list of all of the papers authored by Jeff: `kubectl get paper -l author=jeff`. Then get all of the papers that are memos in raw YAML: `kubectl get paper -l type=memo -o yaml`.
 
 In the second case you can see where the labels were added to the `metadata` for each resource. These demonstrate all of the basic principals and tools for working with data in a Kubernetes cluster. Working with Every resource type (be it a workload resource, a network resource, or an RBAC resource) will feel similar and you'll use similar patterns for working with the data. Kubectl does expose other higher-level or imperative operations, but know that those are doing the same things under the covers.
 
