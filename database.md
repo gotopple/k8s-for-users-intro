@@ -99,6 +99,28 @@ kubectl get paper first-paper -o yaml
 
 At this point you've created your first record in a custom schema in your personal Kubernetes database. Okay, well, technically two records... One for the CRD and one for the Paper. Things get more interesting when you start adding multiple resources. Add a second one from [second-example-paper.yaml](database/second-example-paper.yaml): `kubectl create -f database/second-example-paper.yaml`.
 
+That resource looks like:
+
+```yaml
+apiVersion: workshop.gotopple.com/v1alpha1
+kind: Paper
+metadata:
+  name: second-paper
+spec:
+        writer: Portia
+        kind: memo
+        data: >
+          Dear reader,
+
+          This is an entirely different document schema. This document uses "writer"
+          instead of "author," "kind" instead of "type," and "data" in place of 
+          "content." You are able to create both the "first-paper" and "second-paper" 
+          resources as the same Kind because there are no validators on the type.
+
+          Enjoy,
+          Portia
+```
+
 Now you can get both resources from Kubernetes at the same time and in a cohesive stream:
 
 ```
