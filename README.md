@@ -14,7 +14,7 @@ If you're not familiar with YAML then you might want to pull up this [YAML Prime
 
 1. [Kubernetes is a Database First](./database.md)
 2. [Introducing Workload Resources](./workload.md)
-3. [Kubernetes Event-Based Automation](./automation.md)
+3. Kubernetes Event-Based Automation
 
 ## Give Me More
 
