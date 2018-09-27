@@ -8,7 +8,7 @@ This morning you're going to learn with a classic Docker example application. Th
 
 The following exercises will walk you through Kubernetes as a database and then service deployment and life cycle management using Kubernetes resources and declarative workflows.
 
-If you're not familiar with YAML then you might want to pull up this [YAML Primer](../YAML_Primer.md) in another tab.
+If you're not familiar with YAML then you might want to pull up this [YAML Primer](./YAML_Primer.md) in another tab.
 
 ## Activities
 
