@@ -1,3 +1,5 @@
+![Topple](./logo/2018TPL-Logo-Wordmark-Mixed-100px.png)
+
 # k8s-for-users-intro
 
 Most people know Kubernetes as a container or service orchestration and resiliency platform. These exercises will help you work through those specific Kubernetes features and the related resources. 
@@ -22,4 +24,3 @@ If you enjoyed this micro-workshop please [reach out](https://www.gotopple.com) 
 
 2018 [Topple](https://www.gotopple.com)
 
-![Topple](./logo/2018TPL-Logo-Wordmark-Mixed-100px.png)
