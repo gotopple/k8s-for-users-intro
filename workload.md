@@ -209,8 +209,10 @@ You're going to want to create two ReplicaSets, one for each type of Pod in the 
 The replicaset solutions are in [votingapp-replicasets.yaml](./workload/votingapp-replicasets.yaml). Start the solution now by running:
 
 ```
-kubectl create -f ./workload/votingapp-replicasets.yaml -f ./workload/v2-services.yaml
+kubectl apply -f ./workload/votingapp-replicasets.yaml -f ./workload/v2-services.yaml
 ```
+
+The `apply` command is a full declarative tool provided by the CLI. It does the hard work of examining the resources described in the YAML, determining if they exist in the database, and then merging the changes with the current state in the database if they do exist. Using `apply` during resource creation will enable you to use `apply` to make changes to the resources later.
 
 When they've reached a full ready state open the voting application in your web browser: [localhost:30000](http://localhost:30000). Cast a vote and note the "container ID" at the bottom of the page. This is the hostname of the pod where the request was served. Note that you did not specify that name anywhere. It was created by the ReplicaSet. Go lookup the running Pod and ReplicaSet resources.
 
