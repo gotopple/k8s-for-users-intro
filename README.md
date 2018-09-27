@@ -1,7 +1,3 @@
-<p style="float:right">
-<img src="https://pbs.twimg.com/profile_images/1025131818364760064/eHQtfFCw_400x400.jpg">
-<p>
-
 # k8s-for-users-intro
 
 Most people know Kubernetes as a container or service orchestration and resiliency platform. These exercises will help you work through those specific Kubernetes features and the related resources. 
@@ -26,3 +22,4 @@ If you enjoyed this micro-workshop please [reach out](https://www.gotopple.com) 
 
 2018 [Topple](https://www.gotopple.com)
 
+![Topple](https://pbs.twimg.com/profile_images/1025131818364760064/eHQtfFCw_400x400.jpg)
