@@ -1,0 +1,25 @@
+apiVersion: workshop.gotopple.com/v1alpha1
+kind: Paper
+metadata:
+  name: first-paper
+spec:
+        author: Jeff
+        type: memo
+        content: >
+          Dear reader,
+
+          This is an example memo demonstrating how we can use Kubernetes to 
+          store arbitrary information. The Papers kind will have already been
+          created, but in this case it does not have any validation rules. 
+
+          Kubernetes uses validation rules to enforce document structures.
+          Without them a user can store any data they want in a resource.
+
+          Run "kubectl create -f database/example-paper.yaml" to add this file
+          to your local cluster and then run, "kubectl get papers" to see
+          "first-paper" added to the list. Run 
+          "kubectl get papers first-paper -o yaml" to view the the raw resource
+          in YAML form.
+
+          Enjoy,
+          Jeff
