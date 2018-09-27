@@ -28,7 +28,11 @@ Run `kubectl version -o yaml` and verify that the client and server are version 
 
 Open and read [business-papers.yaml](database/business-papers.yaml). This file defines a Custom Resource Definition (CRD) for a new kind called Paper (or Papers). A CRD is a resource that tells Kubernetes about a Kind of resource. Think of it like a table definition in a database. You might notice that this CRD only gives the new kind a name (and group, and version), and doesn't specify any columns or properties. Kubernetes is a document database and document structures are constrained by validation rules. This CRD does not provide any validation rules.
 
-Add this CRD to your cluster using the command: `kubectl create -f database/business-papers.yaml`.
+Add this CRD to your cluster using the command: 
+
+```sh
+kubectl create -f database/business-papers.yaml
+```
 
 You should see output like: 
 
@@ -74,7 +78,7 @@ spec:
 
 Create the Paper in your cluster:
 
-```
+```sh
 kubectl create -f database/example-paper.yaml
 ```
 
@@ -86,14 +90,14 @@ paper.workshop.gotopple.com "first-paper" created
 
 Now list and retrieve the Paper from your cluster. Run:
 
-```
+```sh
 kubectl get papers
 kubectl get paper first-paper
 ```
 
 Retrieve the raw YAML for the first-paper:
 
-```
+```sh
 kubectl get paper first-paper -o yaml
 ```
 
@@ -123,7 +127,7 @@ spec:
 
 Now you can get both resources from Kubernetes at the same time and in a cohesive stream:
 
-```
+```sh
 kubectl get papers -o yaml
 ```
 
@@ -184,14 +188,24 @@ While Kubernetes does not enable you to query based on arbitrary document proper
 
 Neither of the Papers that you added have any labels applied. So, to make this exercise a bit more interesting add a label to the `first-paper` paper using the following command:
 
-```
+```sh
 kubectl label paper first-paper author=jeff type=memo
 kubectl label paper second-paper author=portia type=memo
 ```
 
 In this case you added two labels to each resource (you could have done this by modifying the YAML as well). You specifically labeled an author and a type. However, you could have added any labels that make sense. Generally you want labels to represent some cross-cutting property, not always something that is in the document itself. But this is a happy example.
 
-After the resources are labeled you can query based on those labels. Get a list of all of the papers authored by Jeff: `kubectl get paper -l author=jeff`. Then get all of the papers that are memos in raw YAML: `kubectl get paper -l type=memo -o yaml`.
+After the resources are labeled you can query based on those labels. Get a list of all of the papers authored by Jeff: 
+
+```sh
+kubectl get paper -l author=jeff
+``` 
+
+Then get all of the papers that are memos in raw YAML: 
+
+```sh
+kubectl get paper -l type=memo -o yaml
+```
 
 In the second case you can see where the labels were added to the `metadata` for each resource. These demonstrate all of the basic principals and tools for working with data in a Kubernetes cluster. Working with Every resource type (be it a workload resource, a network resource, or an RBAC resource) will feel similar and you'll use similar patterns for working with the data. Kubectl does expose other higher-level or imperative operations, but know that those are doing the same things under the covers.
 
