@@ -82,13 +82,13 @@ redis     1/1       Running   0          2m
 
 This is a list of the Pods running in the workshop Namespace. Note that 1/1 is in a Ready state. For reference you can compare that list with the Pods running in the `default` Namespace by running `kubectl get po`. There shouldn't be anything listed.
 
-So, redis is running "somewhere" but how do you access it? How do you know anything about it? You can get deep details about any Kubernetes resource (including your Pods) with the `kubectl describe` subcommand. Like other kubectl commands the first argument is always the resource type that you're inspecting and the remainder is a variadic list of names that you want to operate on. 
+So, Redis is running "somewhere" but how do you access it? How do you know anything about it? You can get deep details about any Kubernetes resource (including your Pods) with the `kubectl describe` subcommand. Like other kubectl commands the first argument is always the resource type that you're inspecting and the remainder is a variadic list of names that you want to operate on. 
 
 ```
 kubectl describe po redis --namespace workshop
 ```
 
-In the output from describe you'll see associated metadata, relationships with other resources, the set of associated containers, and an assigned IP address (this is the ClusterIP which we'll cover later). This is the IP address for the Pod. However you'll also note that it is a private network IP address that is not likely routable from your browser or terminal. If you want to test this redis instance you're going to need to get creative.
+In the output from describe you'll see associated metadata, relationships with other resources, the set of associated containers, and an assigned IP address (this is the ClusterIP which we'll cover later). This is the IP address for the Pod. However you'll also note that it is a private network IP address that is not likely routable from your browser or terminal. If you want to test this Redis instance you're going to need to get creative.
 
 You might be familiar with Docker already and be used to the idea of execing a command in a running container. Well Kubernetes is built on top of Docker or other similar container technology. You can see the redis container in your Pod by running `docker ps`.
 
