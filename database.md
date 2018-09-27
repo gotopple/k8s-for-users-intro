@@ -44,6 +44,34 @@ When you do so you'll notice that the list is empty. Next create a new paper.
 
 You will find two Papers in the databases folder as well. Open the first example in [example-paper.yaml](database/example-paper.yaml). There are only a handful of expected properties for resources. Every resource will have an `apiVersion`, a `kind`, a `metadata` section that includes a `name`, and a `spec`. The `apiversion` and `kind` must match an existing Kind in your cluster. Everything under `spec` is constrained by the CRD validation (which does not exist in this example).
 
+```yaml
+apiVersion: workshop.gotopple.com/v1alpha1
+kind: Paper
+metadata:
+  name: first-paper
+spec:
+        author: Jeff
+        type: memo
+        content: >
+          Dear reader,
+
+          This is an example memo demonstrating how we can use Kubernetes to 
+          store arbitrary information. The Papers kind will have already been
+          created, but in this case it does not have any validation rules. 
+
+          Kubernetes uses validation rules to enforce document structures.
+          Without them a user can store any data they want in a resource.
+
+          Run "kubectl create -f database/example-paper.yaml" to add this file
+          to your local cluster and then run, "kubectl get papers" to see
+          "first-paper" added to the list. Run 
+          "kubectl get papers first-paper -o yaml" to view the the raw resource
+          in YAML form.
+
+          Enjoy,
+          Jeff
+```
+
 Create the Paper in your cluster:
 
 ```
@@ -79,7 +107,7 @@ kubectl get papers -o yaml
 
 The result is a single document where each Paper is included as an item in the `items` list:
 
-```
+```yaml
 apiVersion: v1
 items:
 - apiVersion: workshop.gotopple.com/v1alpha1
