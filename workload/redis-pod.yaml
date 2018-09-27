@@ -1,0 +1,26 @@
+# Everything in this file is part of the same YAML document and 
+# thusly the same Kubernetes resource definition.
+
+apiVersion: v1    # Kubernetes API version
+kind: Pod         # Document resource kind
+
+metadata:         # Resource-level metadata
+  name: redis     # Name of the resource
+  labels:         # Applying taxonomy allows other resources to 
+                  # refer to this via selectors.
+    app: redis    # Labels are in a <key>: <value> form.
+    version: v1   # The version label is not special, though 
+                  # it is common for use with deployment and 
+                  # routing selection.
+  # This will keep solution resources in a separate Kubernetes namespace
+  namespace: workshop
+
+# Every resource has a spec. This is a free-form property map 
+# and validated on the serverside to match known resource types.
+spec:            
+
+  # Each pod can contain multiple containers. They all share IPC, 
+  # NET, and UTS namespaces. They are all on the same "virtual host."
+  containers:    
+   - name: redis
+     image: redis:alpine
