@@ -214,7 +214,7 @@ kubectl apply -f ./workload/votingapp-replicasets.yaml -f ./workload/v2-services
 
 The `apply` command is a full declarative tool provided by the CLI. It does the hard work of examining the resources described in the YAML, determining if they exist in the database, and then merging the changes with the current state in the database if they do exist. Using `apply` during resource creation will enable you to use `apply` to make changes to the resources later.
 
-When they've reached a full ready state open the voting application in your web browser: [localhost:30000](http://localhost:30000). Cast a vote and note the "container ID" at the bottom of the page. This is the hostname of the pod where the request was served. Note that you did not specify that name anywhere. It was created by the ReplicaSet. Go lookup the running Pod and ReplicaSet resources.
+When they've reached a full ready state open the voting application in your web browser: [localhost:31000](http://localhost:31000). Cast a vote and note the "container ID" at the bottom of the page. This is the hostname of the pod where the request was served. Note that you did not specify that name anywhere. It was created by the ReplicaSet. Go lookup the running Pod and ReplicaSet resources.
 
 ```
 kubectl get rs --namespace workshop
@@ -233,7 +233,7 @@ Deleting the Pod is one type of failure from the perspective of the replicaset-c
 
 You should describe the ReplicaSet resource again and examine the Event list. You'll see that there is a new event describing the creation of a new Pod. If you then reload the voting page you'll notice that the app still works and is being served by the replacement Pod.
 
-You've witnessed both the resilience and dynamic service backend routing mechanisms provided by Kubernetes controllers. Before moving on, take a moment to vote Cats vs Dogs. Then load the results page [localhost:30001](http://localhost:30001) and verify that the vote was recorded.
+You've witnessed both the resilience and dynamic service backend routing mechanisms provided by Kubernetes controllers. Before moving on, take a moment to vote Cats vs Dogs. Then load the results page [localhost:31001](http://localhost:31001) and verify that the vote was recorded.
 
 The problem with containers, Pods, ReplicaSets, etc is that they are primarily concerned with runtime context and consistent disposable processes. Persistent state needs to be modeled. The results Pod uses a volume, but a Kubernetes volume is scoped to a Pod. Volumes are cleaned up when Pods are cleaned up and they are not shared across Pods. Watch what happens when you delete your results Pod. Do that now and reload the results page. You should note the vote goes back to 50/50.
 
@@ -259,7 +259,7 @@ Product management issued you a ticket and they want to roll out a new poll. The
 
 **With your solution from exercise 4 running**, update your definition file and change the images used for the voter and results containers from the `:before` tag to the `:after` tag. When you've updated both Pod definitions you're going to trigger a deployment using the `kubectl apply` command.
 
-Once the changes have been applied reload [localhost:30000](http://localhost:30000) and [localhost:30001](http://localhost:30001). Did you see where the new poll came up? No? What if you refresh again? Maybe wait a few seconds and try again. No? You might notice that the vote page is being served by the same Pod as before. It is almost like no changes were made to the running software.
+Once the changes have been applied reload [localhost:31000](http://localhost:31000) and [localhost:31001](http://localhost:31001). Did you see where the new poll came up? No? What if you refresh again? Maybe wait a few seconds and try again. No? You might notice that the vote page is being served by the same Pod as before. It is almost like no changes were made to the running software.
 
 Well if you inspect the ReplicaSet configurations with `kubectl describe` you'll note that the Pod template does specify the `:after` image. But that there is only a single Pod creation event in the history. It looks like you'll need to manually trigger the replacement. 
 
