@@ -173,16 +173,16 @@ Create Service resource definitions according to the following table:
 | Service name  | Publish Port | Internal (y/n) | Selector |
 | ------------- |:------------:|:--------------:|---------:|
 | redis | 6379/TCP | y | `app: voter` |
-| vote | 30000/TCP | n | `app: voter` |
-| result | 30001/TCP | n | `app: results` |
+| vote | 31000/TCP | n | `app: voter` |
+| result | 31001/TCP | n | `app: results` |
 
-Consider the solution at [services.yaml][./workload/services.yaml].
+Consider the solution at [services.yaml](./workload/services.yaml).
 
 Once you're done startup your app: `kubectl create -f ./workload/votingapp-pods.yaml -f ./workload/services.yaml`
 
 ##### Trying it out
 
-Poll the resources a few times with `kubectl get po` and `kubectl get svc`. When all of the resources are ready you should be able to load up the voting and results apps in your web browser by navigating to [localhost:30000](http://localhost:30000) and [localhost:30001](http://localhost:30001) respectively. 
+Poll the resources a few times with `kubectl get po` and `kubectl get svc`. When all of the resources are ready you should be able to load up the voting and results apps in your web browser by navigating to [localhost:31000](http://localhost:31000) and [localhost:31001](http://localhost:31001) respectively. 
 
 Votes cast in one window should be reflected in the other shortly.
 
