@@ -133,7 +133,7 @@ Should be named `results` and have labels `app: results` and `version: v1`. This
 
 | Name  | EmptyDir |
 | --------------- |:----:|
-| db-data | `{}`` | 
+| db-data | `{}` | 
 
 And the following container definitions:
 
