@@ -26,7 +26,26 @@ Run `kubectl version -o yaml` and verify that the client and server are version 
 
 ### 2. Create a Custom Schema (Kind)
 
-Open and read [business-papers.yaml](database/business-papers.yaml). This file defines a Custom Resource Definition (CRD) for a new kind called Paper (or Papers). A CRD is a resource that tells Kubernetes about a Kind of resource. Think of it like a table definition in a database. You might notice that this CRD only gives the new kind a name (and group, and version), and doesn't specify any columns or properties. Kubernetes is a document database and document structures are constrained by validation rules. This CRD does not provide any validation rules.
+The following are the contents of [business-papers.yaml](database/business-papers.yaml). It defines a Custom Resource Definition (CRD) for a new kind called Paper (or Papers).
+
+```yaml
+apiVersion: apiextensions.k8s.io/v1beta1    # Tells Kubernetes what API version of this resource (the CRD)
+kind: CustomResourceDefinition              # Tells Kubernetes that this is a CRD - just another kind of data
+metadata:
+  name: papers.workshop.gotopple.com        # The name of this CRD
+
+# All Kubernetes resources have a "spec." Think of this like the data or content of the resource.
+spec:
+  group: workshop.gotopple.com              # CRDs have a validated group attribute
+  names:
+    kind: Paper                             # The CRD that this document defines should be named "Paper"
+    plural: papers                          #   or "papers."
+  scope: Namespaced                         # Means we can have different CRDs named "Paper" in different 
+                                            #   namespaces without conflict.
+  version: v1alpha1                         # The CRD defined by this spec is version, "v1alpha1"
+```
+
+A CRD is a resource that tells Kubernetes about a Kind of resource. Think of it like a table definition in a database. You might notice that this CRD only gives the new kind a name (and group, and version), and doesn't specify any columns or properties. Kubernetes is a document database and document structures are constrained by validation rules. This CRD does not provide any validation rules.
 
 Add this CRD to your cluster using the command: 
 
