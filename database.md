@@ -24,6 +24,8 @@ The `kubectl` command provides a `version` subcommand. By default its output is 
 
 Run `kubectl version -o yaml` and verify that the client and server are version 1.10 or later. Ideally the client and server version will match.
 
+If you get an error verify that Kubernetes is running. If you still get an error check out the troubleshooting guide on Kubernetes's website.
+
 ### 2. Create a Custom Schema (Kind)
 
 The following are the contents of [business-papers.yaml](database/business-papers.yaml). It defines a Custom Resource Definition (CRD) for a new kind called Paper (or Papers).
