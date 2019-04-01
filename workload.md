@@ -80,7 +80,7 @@ NAME      READY     STATUS    RESTARTS   AGE
 redis     1/1       Running   0          2m
 ```
 
-This is a list of the Pods running in the workshop Namespace. Note that 1/1 is in a Ready state. For reference you can compare that list with the Pods running in the `default` Namespace by running `kubectl get po`. There shouldn't be anything listed.
+This is a list of the Pods running in the workshop Namespace. Note that 1/1 is in a Ready state. For reference you can compare that list with the Pods running in the `default` Namespace by running `kubectl get po` (po is short for pod). There shouldn't be anything listed.
 
 So, Redis is running "somewhere" but how do you access it? How do you know anything about it? You can get deep details about any Kubernetes resource (including your Pods) with the `kubectl describe` subcommand. Like other kubectl commands the first argument is always the resource type that you're inspecting and the remainder is a variadic list of names that you want to operate on. 
 
