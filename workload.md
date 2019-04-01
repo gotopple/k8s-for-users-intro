@@ -92,7 +92,7 @@ In the output from describe you'll see associated metadata, relationships with o
 
 You might be familiar with Docker already and be used to the idea of execing a command in a running container. Well Kubernetes is built on top of Docker or other similar container technology. You can see the redis container in your Pod by running `docker ps`.
 
-You could exec a command in the redis container, but in production you'd only be able to do that from the cluster node where the container is running. That won't scale well. Instead use the `kubectl exec` subcommand. This will exec a command inside the container. It is similar in form and function but since Pods can contain multiple containers it does require a bit of refinement. Use the following command to define and increment a counter in your redis instance:
+You could exec a command in the redis container, but in production you'd only be able to do that from the cluster node where the container is running. That won't scale well. Instead use the `kubectl exec` subcommand. This will execute a command inside the container. It is similar in form and function but since Pods can contain multiple containers it does require a bit of refinement. Use the following command to define and increment a counter in your redis instance:
 
 ```
 kubectl exec redis --namespace workshop -i -t -- redis-cli incr my-training-counter
