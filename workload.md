@@ -273,6 +273,6 @@ This was a dangerous flip operation. You could have done a more seamless migrati
 
 ### What is Next?
 
-The workflow described in the previous exercise is automated by Kubernetes Deployment resources. Using those, diving into batch processing with Jobs, and covering state management with PersistentSets are covered by the full workshop offered by [Topple](https//www.gotopple.com). If you interested in learning more about workload resources and management workflows using Kubernetes reach out and ask about our multi-day workshops.
+The workflow described in the previous exercise is automated by Kubernetes Deployment resources. Using those, diving into batch processing with Jobs, and covering state management with PersistentSets are covered by the full workshop offered by [Topple](https://www.gotopple.com). If you interested in learning more about workload resources and management workflows using Kubernetes reach out and ask about our multi-day workshops.
 
 
